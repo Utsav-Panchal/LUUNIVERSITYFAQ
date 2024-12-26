@@ -1,0 +1,308 @@
+version: "3.1"
+nlu:
+- intent: bot_challenge
+  examples: |
+    - are you a bot?
+    - am I talking to a bot?
+- intent: ask_for_research_prof
+  examples: |
+    - I need professor for [artificial intelligence](topic)
+    - help me find professors for [cybersecurity](topic)
+    - I need help finding professors for [machine learning](topic)
+- intent: ask_student_program_requirements
+  examples: |
+    - can i know student and program admission requirements at lakehead
+    - what are student and program admission requirements
+    - need student and program admission requirements
+- intent: program_type
+  examples: |
+    - need to learn about graduate programs
+    - can i know more about speciality programs
+    - want to learn about undergraduate programs
+- intent: ask_specific_deadline
+  examples: |
+    - give me deadlines for [deferral request]
+    - I need admission deadline for [undergraduate fall](program_intake)
+    - can i know admission deadline for [spring/summer](program_intake)
+- intent: undergraduate_application
+  examples: |
+    - undergraduate application
+    - applying for undergraduate studies
+- intent: graduate_application
+  examples: |
+    - choose graduate
+    - select graduate
+    - applying for graduate studies
+- intent: check_admission_info
+  examples: |
+    - Tell me about the next intake
+    - Can you please tell me about the next intake
+    - When is the next intake
+    - next intake
+- intent: request_proff_name
+  examples: |
+    - Give me contact information of professor
+    - professor contact
+    - i want contact information of professor
+- intent: ask_admission_requirements
+  examples: |
+    - can i know about the admission requirements at lakehead
+    - i want to know the requirements for admissions
+    - need admission requirements
+    - admission requirements
+- intent: ask_ielts_requirements
+  examples: |
+    - need to learn about english language proficiency
+    - can i know more about english language proficiency
+    - english language proficiency requirements
+- intent: ask_admission_deadline
+  examples: |
+    - need admission deadlines
+    - admission deadline
+    - need final dates for applying
+    - give me admission deadlines
+- intent: give_feedback
+  examples: |
+    - can i give feeback
+    - provide feedback
+    - feedback form
+- intent: after_applying
+  examples: |
+    - what to expect after applying
+    - post application steps
+    - steps after applying
+    - things to do after applying
+- intent: ask_track_application_status
+  examples: |
+    - need help tracking application status
+    - application status
+    - how to know application status
+- intent: payment_options
+  examples: |
+    - what are the various ways of payment
+    - payment methods
+    - how can i pay
+    - modes of payment
+- intent: ask_defer_admission
+  examples: |
+    - can i start my studies at a later date
+    - need to start my program at a later semester
+    - want to defer my admission
+- intent: new_student
+  examples: |
+    - things new students need
+    - resources for new students
+    - i am a new student
+    - new student
+- intent: ask_housing
+  examples: |
+    - student needs information on residence
+    - new student needs housing information
+    - i need more information on housing
+- intent: affirm
+  examples: |
+    - yes
+    - of course
+    - indeed
+    - y
+- intent: check_upcoming_holidays
+  examples: |
+    - When is my next holiday
+    - Show me this month's holidays
+    - tell me about the upcoming holidays
+    - want to know about holidays
+    - upcoming holidays
+- intent: am_student
+  examples: |
+    - i am a high school student
+    - I am a special student
+    - i am an undergraduate student
+    - i am a student applicant
+- intent: low_average
+  examples: |
+    - do not meet admission requirements
+    - not enough grades
+    - did not achieve the required grade
+    - did not achieve cut-off average
+- intent: ask_study_permit_info
+  examples: |
+    - how to get study permit
+    - steps for study permit application
+    - need to know about study permit
+    - how to apply for study permit
+- intent: search_facebook
+  examples: |
+    - need to look at facebook
+    - lakehead's facebook
+    - search facebook posts
+    - want to search facebook
+- intent: ask_accept_admission_offer
+  examples: |
+    - admission offer acceptance
+    - steps to take after being offered admission
+    - how to accept admission offer
+    - what can i do to accept admission
+    - accept admission offer
+- intent: pay_confirmation_deposit
+  examples: |
+    - payment for admission confirmation
+    - confirmation deposit
+    - admission confirmation deposit
+    - how to pay confirmation deposit
+- intent: ask_tuition_fee
+  examples: |
+    - tuition and fees
+    - need to learn about the fee structure
+    - tuition fee
+    - can i know about tuition fee
+- intent: deny
+  examples: |
+    - no way
+    - don't like that
+    - I don't think so
+    - never
+    - no
+- intent: campus_facilities
+  examples: |
+    - what is campus life like at lakehead
+    - student support resources
+    - How can i learn about sports and recreational activities
+    - what are the different facilities provided by lakehead
+    - learn more about campus facilities
+- intent: ask_international_student_services
+  examples: |
+    - need help from advisor with immigration matters
+    - immigration advisor
+    - have to speak to an advisor for immigration
+    - advice on immigration
+    - want to learn more about immigration from advisor
+- intent: ask_admission_decision_timeline
+  examples: |
+    - admission decision timeline
+    - when will i know admission decision
+    - application outcome
+    - when can i know application outcome
+- intent: ask_myinfo
+  examples: |
+    - what is myInfo
+    - where is the myInfo link
+    - myInfo login
+    - how to use myInfo
+    - myInfo link
+- intent: password_troubleshoot
+  examples: |
+    - problems with myInfo password
+    - help with password
+    - password issues
+    - myInfo password
+    - password troubleshoot
+- intent: apply_to_lakehead
+  examples: |
+    - lakehead university application process
+    - looking to apply to lakehead university
+    - need to apply to lakehead
+    - want to start application
+    - want to apply to lakehead
+    - need to begin my application
+    - how to apply to lakehead
+- intent: goodbye
+  examples: |
+    - see you later
+    - good by
+    - bye bye
+    - cee you later
+    - goodbye
+    - bye
+    - see you around
+- intent: greet
+  examples: |
+    - let's go
+    - hey there
+    - moin
+    - hi
+    - hello
+    - hey dude
+    - good afternoon
+    - hello there
+    - hey
+- intent: mood_great
+  examples: |
+    - feeling like a king
+    - so perfect
+    - amazing
+    - I am amazing
+    - wonderful
+    - perfect
+    - so good
+    - extremely good
+    - I am feeling very good
+    - so so perfect
+- intent: mood_unhappy
+  examples: |
+    - sad
+    - I am disappointed
+    - so sad
+    - my day was horrible
+    - so saad
+    - I am sad
+    - I don't feel very well
+    - unhappy
+    - not good
+- lookup: topic
+  examples: |
+    - networks
+    - computer communications
+    - cryptography
+    - network security
+    - combinatorics
+    - coding theory
+    - Thick Data Analytics
+    - Collaborative Learning
+    - Data Mining
+    - Web Services
+    - smart health
+    - artificial intelligence
+    - Internet of Healthcare Things
+    - Graph-Based Data Analytics
+    - Translational Medical Informatics
+    - Social Data Analytics
+    - Health Informatics
+    - Mathematical and Computational Modelling
+    - Optimization
+    - 5G and beyond wireless communication systems
+    - Internet of Things
+    - IoT
+    - smart health technology
+    - deep learning
+    - edge computing
+    - Robotics
+    - Haptics
+    - big data
+    - Human-Computer Interaction
+    - Tactile Perception
+    - natural language processing,
+    - software maintenance and evolution
+    - mining software repositories
+    - program comprehension
+    - web information retrieval
+    - recommendation systems
+    - Authentication
+    - Machine Interface
+    - cybersecurity
+    - SoC hardware acceleration for application AI
+    - Machine Vision
+    - System-Level Design for AI Application
+    - Edge Computing
+    - Adaptive Computing
+    - HW/SW Co-Design
+    - Abnormal activity recognition
+    - Complexity Analysis
+    - Algorithm Design for AI
+    - Knowledge Representation and Reasoning
+    - Processing Modeling
+    - Numerical Analysis
+    - Large Sparse Linear Systems
+    - Multigrid Methods
+    - Neural Networks
+    - Graph Drawing and Visualization
+    - machine learning

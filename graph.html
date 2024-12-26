@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Rasa Core Visualisation</title>
+    <script src="https://dagrejs.github.io/project/dagre-d3/latest/dagre-d3.min.js"></script>
+    <script src="https://dagrejs.github.io/project/dagre/latest/dagre.min.js"></script>
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://dagrejs.github.io/project/graphlib-dot/v0.6.3/graphlib-dot.js"></script>
+</head>
+<body>
+<div id="errormsg" style="color: #b00"></div>
+<svg>
+    <style id="graph-style">
+        .node.invisible > rect {
+            display: none;
+        }
+
+        .node.start > rect {
+            fill: #7f7;
+            rx: 30;
+            ry: 18;
+        }
+
+        .node.end > rect {
+            fill: #f77;
+            rx: 30;
+            ry: 18;
+        }
+
+        .node:not(.active) > rect, .node:not(.active) > .label {
+            opacity: 0.4;
+        }
+
+        .edgePath:not(.active) path {
+            opacity: 0.4;
+        }
+
+        .node.ellipsis > rect {
+            fill: #CCC;
+        }
+
+        .node.intent > rect {
+            fill: #7ff;
+        }
+
+        .node.dashed > rect {
+            stroke-dasharray: 5;
+        }
+
+        text {
+            font-weight: 300;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serf, serif;
+            font-size: 14px;
+            color: #1f1d1d;
+        }
+
+        .node rect {
+            stroke: #444;
+            fill: #fff;
+            stroke-width: 1.5px;
+        }
+
+        .edgePath path {
+            stroke: #333;
+            stroke-width: 1.5px;
+        }
+
+        svg {
+            position: fixed;
+            top: 10px;
+            left: 0;
+            height: 100%;
+            width: 100%
+        }
+    </style>
+    <g></g>
+</svg>
+<script>
+
+  function serveGraph() {
+    let oldInputGraphValue;
+
+    const url = 'visualization.dot';
+    const refreshInterval = 500;
+
+    // trigger a refresh by fetching an updated graph
+    setInterval(function () {
+      fetch(url).then(r => r.text()).then(dot => {
+        document.getElementById('errormsg').innerHTML = '';
+        if (oldInputGraphValue === dot) return;
+
+        oldInputGraphValue = dot;
+        drawGraph(dot);
+      }).catch(err => {
+        document.getElementById('errormsg').innerHTML =
+          'Failed to update plot. (' + err.message + ')';
+      });
+    }, refreshInterval);
+  }
+
+  function drawGraph(graph) {
+    let g = graphlibDot.read(graph);
+    // Set margins, if not present
+    if (!g.graph().hasOwnProperty("marginx") &&
+      !g.graph().hasOwnProperty("marginy")) {
+      g.graph().marginx = 20;
+      g.graph().marginy = 20;
+    }
+    g.graph().transition = function (selection) {
+      return selection.transition().duration(300);
+    };
+    // Render the graph into svg g
+    d3.select("svg g").call(render, g);
+  }
+  // Set up zoom support
+  const svg = d3.select("svg"),
+    inner = d3.select("svg g"),
+    zoom = d3.zoom().on("zoom", function () {
+      inner.attr("transform", d3.event.transform);
+    });
+  svg.call(zoom);
+
+  // Create and configure the renderer
+  const render = dagreD3.render();
+
+  let isClient = false;
+  isClient = true;
+
+  if (isClient) {
+    // Mark all nodes and their edges as active
+    cssRules = document.getElementById('graph-style').sheet.cssRules;
+    cssRules[3].style.opacity = 1;
+    cssRules[4].style.opacity = 1;
+
+    let graph;
+    graph = `digraph  {
+0 [class="start active", fillcolor=green, fontsize=12, label=START, style=filled];
+"-1" [class=end, fillcolor=red, fontsize=12, label=END, style=filled];
+1 [class="", fontsize=12, label=utter_greet];
+2 [class="", fontsize=12, label=utter_happy];
+4 [class="", fontsize=12, label=utter_cheer_up];
+5 [class="", fontsize=12, label=utter_did_that_help];
+10 [class="", fontsize=12, label=utter_goodbye];
+12 [class="", fontsize=12, label=display_upcoming_holidays];
+14 [class="", fontsize=12, label=action_admission_info];
+15 [class="", fontsize=12, label=action_campus_facilities];
+16 [class="", fontsize=12, label=utter_facebook_search];
+17 [class="", fontsize=12, label=facebook_search_form];
+18 [class="", fontsize=12, label=utter_facebook_submit];
+19 [class="", fontsize=12, label=action_search_facebook];
+21 [class="", fontsize=12, label=proff_name_form];
+22 [class="", fontsize=12, label=utter_proff_name_slot_values];
+23 [class="", fontsize=12, label=action_search_proff_info];
+25 [class="", fontsize=12, label=action_find_prof_name];
+27 [class="", fontsize=12, label=utter_specific_admission];
+28 [class="", fontsize=12, label=action_admission_requirements];
+29 [class="", fontsize=12, label=utter_specific_admission_two];
+30 [class="", fontsize=12, label=utter_student_type];
+31 [class="", fontsize=12, label=utter_program_type];
+32 [class="", fontsize=12, label=action_ielts_requirements];
+34 [class="", fontsize=12, label=utter_admission_deadline];
+35 [class="", fontsize=12, label=action_admission_deadline];
+36 [class="", fontsize=12, label=utter_admission_deadline];
+37 [class="", fontsize=12, label=action_alternate_offers];
+38 [class="", fontsize=12, label=action_application_steps];
+39 [class="", fontsize=12, label=utter_ask_application_type];
+40 [class="", fontsize=12, label=action_bachelors_application_link];
+42 [class="", fontsize=12, label=action_graduate_application_link];
+44 [class="", fontsize=12, label=action_study_permit];
+45 [class="", fontsize=12, label=action_international_student_services];
+46 [class="", fontsize=12, label=utter_ask_feedback];
+47 [class="", fontsize=12, label=feedback_form];
+48 [class="", fontsize=12, label=action_save_feedback];
+49 [class="", fontsize=12, label=action_keep_tab];
+50 [class="", fontsize=12, label=utter_post_admission_step];
+51 [class="", fontsize=12, label=action_admission_decision_timeline];
+52 [class="", fontsize=12, label=utter_post_admission_step_two];
+53 [class="", fontsize=12, label=utter_admission_tracking];
+54 [class="", fontsize=12, label=action_myinfo];
+55 [class="", fontsize=12, label=utter_post_admission_step_two];
+56 [class="", fontsize=12, label=action_password_troubleshoot];
+58 [class="", fontsize=12, label=action_accept_admission];
+59 [class="", fontsize=12, label=utter_post_admission_step_two];
+60 [class="", fontsize=12, label=action_confirmation_deposit];
+61 [class="", fontsize=12, label=action_payment_options];
+63 [class="", fontsize=12, label=action_defer_admission];
+65 [class="", fontsize=12, label=action_payment_options];
+66 [class="", fontsize=12, label=utter_new_student];
+67 [class="", fontsize=12, label=action_tuition_fee];
+69 [class="", fontsize=12, label=action_housing];
+71 [class="", fontsize=12, label="..."];
+74 [class="", fontsize=12, label=utter_iamabot];
+76 [class="", fontsize=12, label=proff_name_form];
+85 [class="", fontsize=12, label=feedback_form];
+91 [class="", fontsize=12, label=facebook_search_form];
+95 [class="", fontsize=12, label=action_two_stage_fallback];
+96 [class=intent, fillcolor=lightblue, label=goodevening, shape=rect, style=filled];
+97 [class=intent, fillcolor=lightblue, label="what are the different facilities provided by lakehead", shape=rect, style=filled];
+98 [class=intent, fillcolor=lightblue, label="social media", shape=rect, style=filled];
+99 [class=intent, fillcolor=lightblue, label="want to know student and program admission requirements", shape=rect, style=filled];
+100 [class=intent, fillcolor=lightblue, label="I am a special student", shape=rect, style=filled];
+101 [class=intent, fillcolor=lightblue, label="want to learn about undergraduate programs", shape=rect, style=filled];
+102 [class=intent, fillcolor=lightblue, label="can i know more about english language proficiency", shape=rect, style=filled];
+103 [class=intent, fillcolor=lightblue, label="give me admission deadlines", shape=rect, style=filled];
+104 [class=intent, fillcolor=lightblue, label="did not achieve the required grade", shape=rect, style=filled];
+105 [class=intent, fillcolor=lightblue, label="need to begin my application", shape=rect, style=filled];
+106 [class=intent, fillcolor=lightblue, label="undergraduate application", shape=rect, style=filled];
+107 [class=intent, fillcolor=lightblue, label="choose graduate", shape=rect, style=filled];
+108 [class=intent, fillcolor=lightblue, label="what is a student visa", shape=rect, style=filled];
+109 [class=intent, fillcolor=lightblue, label="want to learn more about immigration from advisor", shape=rect, style=filled];
+110 [class=intent, fillcolor=lightblue, label="how to give feedback", shape=rect, style=filled];
+111 [class=intent, fillcolor=lightblue, label="what do i do after applying", shape=rect, style=filled];
+112 [class=intent, fillcolor=lightblue, label="application outcome", shape=rect, style=filled];
+113 [class=intent, fillcolor=lightblue, label="need help tracking application status", shape=rect, style=filled];
+114 [class=intent, fillcolor=lightblue, label="where is the myInfo link", shape=rect, style=filled];
+115 [class=intent, fillcolor=lightblue, label="steps to take after being offered admission", shape=rect, style=filled];
+116 [class=intent, fillcolor=lightblue, label="want to defer my admission", shape=rect, style=filled];
+117 [class=intent, fillcolor=lightblue, label="payment methods", shape=rect, style=filled];
+118 [class=intent, fillcolor=lightblue, label="resources for new students", shape=rect, style=filled];
+119 [class=intent, fillcolor=lightblue, label="can i know about tuition fee", shape=rect, style=filled];
+120 [class=intent, fillcolor=lightblue, label="i need more information on housing", shape=rect, style=filled];
+121 [class=intent, fillcolor=lightblue, label="super stoked", shape=rect, style=filled];
+122 [class=intent, fillcolor=lightblue, label="super sad", shape=rect, style=filled];
+123 [class=intent, fillcolor=lightblue, label="want to know about holidays", shape=rect, style=filled];
+124 [class=intent, fillcolor=lightblue, label="Tell me about the next intake", shape=rect, style=filled];
+125 [class=intent, fillcolor=lightblue, label="i want contact information of professor", shape=rect, style=filled];
+126 [class=intent, fillcolor=lightblue, label="I need professor for artificial intelligence", shape=rect, style=filled];
+127 [class=intent, fillcolor=lightblue, label="admission requirements", shape=rect, style=filled];
+128 [class=intent, fillcolor=lightblue, label=indeed, shape=rect, style=filled];
+129 [class=intent, fillcolor=lightblue, label=n, shape=rect, style=filled];
+130 [class=intent, fillcolor=lightblue, label="I need admission deadline for undergraduate fall", shape=rect, style=filled];
+131 [class=intent, fillcolor=lightblue, label="problems with myInfo password", shape=rect, style=filled];
+132 [class=intent, fillcolor=lightblue, label="how to pay confirmation deposit", shape=rect, style=filled];
+133 [class=intent, fillcolor=lightblue, label="cee you later", shape=rect, style=filled];
+134 [class=intent, fillcolor=lightblue, label="are you a human?", shape=rect, style=filled];
+135 [class=intent, fillcolor=lightblue, label="get the contact information of professor", shape=rect, style=filled];
+136 [class=intent, fillcolor=lightblue, label="can i give feeback", shape=rect, style=filled];
+137 [class=intent, fillcolor=lightblue, label="want to search facebook", shape=rect, style=filled];
+138 [class=intent, fillcolor=lightblue, label="/nlu_fallback", shape=rect, style=filled];
+0 -> 71  [class="", key=NONE, label=""];
+0 -> 96  [class="", key=0];
+0 -> 97  [class="", key=0];
+0 -> 98  [class="", key=0];
+0 -> 99  [class="", key=0];
+0 -> 100  [class="", key=0];
+0 -> 101  [class="", key=0];
+0 -> 102  [class="", key=0];
+0 -> 103  [class="", key=0];
+0 -> 104  [class="", key=0];
+0 -> 105  [class="", key=0];
+0 -> 106  [class="", key=0];
+0 -> 107  [class="", key=0];
+0 -> 108  [class="", key=0];
+0 -> 109  [class="", key=0];
+0 -> 110  [class="", key=0];
+0 -> 111  [class="", key=0];
+0 -> 112  [class="", key=0];
+0 -> 113  [class="", key=0];
+0 -> 114  [class="", key=0];
+0 -> 115  [class="", key=0];
+0 -> 116  [class="", key=0];
+0 -> 117  [class="", key=0];
+0 -> 118  [class="", key=0];
+0 -> 119  [class="", key=0];
+0 -> 120  [class="", key=0];
+1 -> 121  [class="", key=0];
+1 -> 122  [class="", key=0];
+1 -> 123  [class="", key=0];
+1 -> 124  [class="", key=0];
+1 -> 125  [class="", key=0];
+1 -> 126  [class="", key=0];
+1 -> 127  [class="", key=0];
+2 -> "-1"  [class="", key=NONE, label=""];
+4 -> 5  [class="", key=NONE, label=""];
+5 -> 128  [class="", key=0];
+5 -> 129  [class="", key=0];
+10 -> "-1"  [class="", key=NONE, label=""];
+12 -> "-1"  [class="", key=NONE, label=""];
+14 -> "-1"  [class="", key=NONE, label=""];
+15 -> "-1"  [class="", key=NONE, label=""];
+16 -> 17  [class="", key=NONE, label=""];
+17 -> 18  [class="", key=NONE, label=""];
+17 -> "-1"  [class="", key=NONE, label=""];
+18 -> 19  [class="", key=NONE, label=""];
+19 -> "-1"  [class="", key=NONE, label=""];
+21 -> 22  [class="", key=NONE, label=""];
+22 -> 23  [class="", key=NONE, label=""];
+23 -> "-1"  [class="", key=NONE, label=""];
+25 -> "-1"  [class="", key=NONE, label=""];
+27 -> "-1"  [class="", key=NONE, label=""];
+28 -> 29  [class="", key=NONE, label=""];
+29 -> "-1"  [class="", key=NONE, label=""];
+30 -> "-1"  [class="", key=NONE, label=""];
+31 -> "-1"  [class="", key=NONE, label=""];
+32 -> 29  [class="", key=NONE, label=""];
+34 -> 130  [class="", key=0];
+35 -> 36  [class="", key=NONE, label=""];
+36 -> "-1"  [class="", key=NONE, label=""];
+37 -> "-1"  [class="", key=NONE, label=""];
+38 -> 39  [class="", key=NONE, label=""];
+39 -> "-1"  [class="", key=NONE, label=""];
+40 -> 39  [class="", key=NONE, label=""];
+42 -> 39  [class="", key=NONE, label=""];
+44 -> "-1"  [class="", key=NONE, label=""];
+45 -> "-1"  [class="", key=NONE, label=""];
+46 -> 47  [class="", key=NONE, label=""];
+47 -> 48  [class="", key=NONE, label=""];
+47 -> "-1"  [class="", key=NONE, label=""];
+48 -> "-1"  [class="", key=NONE, label=""];
+49 -> 50  [class="", key=NONE, label=""];
+50 -> "-1"  [class="", key=NONE, label=""];
+51 -> 52  [class="", key=NONE, label=""];
+52 -> "-1"  [class="", key=NONE, label=""];
+53 -> "-1"  [class="", key=NONE, label=""];
+54 -> 55  [class="", key=NONE, label=""];
+55 -> 131  [class="", key=0];
+56 -> 52  [class="", key=NONE, label=""];
+58 -> 59  [class="", key=NONE, label=""];
+59 -> 132  [class="", key=0];
+60 -> 61  [class="", key=NONE, label=""];
+61 -> 52  [class="", key=NONE, label=""];
+63 -> 52  [class="", key=NONE, label=""];
+65 -> "-1"  [class="", key=NONE, label=""];
+66 -> "-1"  [class="", key=NONE, label=""];
+67 -> 66  [class="", key=NONE, label=""];
+69 -> 66  [class="", key=NONE, label=""];
+71 -> 21  [class="", key=NONE, label=""];
+71 -> 85  [class="", key=NONE, label=""];
+71 -> 91  [class="", key=NONE, label=""];
+71 -> 133  [class="", key=0];
+71 -> 134  [class="", key=0];
+71 -> 135  [class="", key=0];
+71 -> 136  [class="", key=0];
+71 -> 137  [class="", key=0];
+71 -> 138  [class="", key=0];
+74 -> "-1"  [class="", key=NONE, label=""];
+76 -> "-1"  [class="", key=NONE, label=""];
+85 -> 48  [class="", key=NONE, label=""];
+91 -> 18  [class="", key=NONE, label=""];
+95 -> "-1"  [class="", key=NONE, label=""];
+96 -> 1  [class="", key=0];
+97 -> 15  [class="", key=0];
+98 -> 16  [class="", key=0];
+99 -> 28  [class="", key=0];
+100 -> 30  [class="", key=0];
+101 -> 31  [class="", key=0];
+102 -> 32  [class="", key=0];
+103 -> 34  [class="", key=0];
+104 -> 37  [class="", key=0];
+105 -> 38  [class="", key=0];
+106 -> 40  [class="", key=0];
+107 -> 42  [class="", key=0];
+108 -> 44  [class="", key=0];
+109 -> 45  [class="", key=0];
+110 -> 46  [class="", key=0];
+111 -> 49  [class="", key=0];
+112 -> 51  [class="", key=0];
+113 -> 53  [class="", key=0];
+114 -> 54  [class="", key=0];
+115 -> 58  [class="", key=0];
+116 -> 63  [class="", key=0];
+117 -> 65  [class="", key=0];
+118 -> 66  [class="", key=0];
+119 -> 67  [class="", key=0];
+120 -> 69  [class="", key=0];
+121 -> 2  [class="", key=0];
+122 -> 4  [class="", key=0];
+123 -> 12  [class="", key=0];
+124 -> 14  [class="", key=0];
+125 -> 21  [class="", key=0];
+126 -> 25  [class="", key=0];
+127 -> 27  [class="", key=0];
+128 -> 2  [class="", key=0];
+129 -> 10  [class="", key=0];
+130 -> 35  [class="", key=0];
+131 -> 56  [class="", key=0];
+132 -> 60  [class="", key=0];
+133 -> 10  [class="", key=0];
+134 -> 74  [class="", key=0];
+135 -> 76  [class="", key=0];
+136 -> 46  [class="", key=0];
+137 -> 16  [class="", key=0];
+138 -> 95  [class="", key=0];
+}
+`;
+    drawGraph(graph);
+  } else {
+    serveGraph();
+  }
+
+
+</script>
+</body>
+</html>
